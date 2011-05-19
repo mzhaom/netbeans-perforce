@@ -82,18 +82,26 @@ public class PerforceCommand extends CookieAction {
 				if( f != null ) {
 					String str;
 					if( dirs ) {
-						l.add( str = f.getCanonicalPath()+"/..." );
-						log.info("Adding source path: "+str);
+						str = f.getCanonicalPath().replace("\\","/")+"/...";
+						if( !l.contains(str) ) {
+							l.add( str );
+							log.info("Adding source path: "+str);
+						}
 					} else {
 						listChildren(root, l);
 					}
 				}
 			} else {
-				l.add( root.getPath() );
+				String f = root.getPath().replace("\\","/");
+				if( !l.contains(f) )
+					l.add( f );
 			}
 		}
-		if( dirs )
-			l.add( projectFileObject.getPath()+"/..." );
+		if( dirs ) {
+			String f = projectFileObject.getPath().replace("\\","/")+"/...";
+			if( !l.contains(f) )
+				l.add( f );
+		}
 
 		String[]n = new String[l.size()];
 		l.toArray(n);
@@ -862,9 +870,12 @@ public class PerforceCommand extends CookieAction {
 			if( fo.isFolder() == false ) {
 				File f = FileUtil.toFile ( fo );
 				String str;
-				list.add( str = f.getCanonicalPath() );
-				if (log.isLoggable(Level.FINE))
-					log.fine("Adding source file: "+str);
+				str = f.getCanonicalPath().replace("\\","/");
+				if( !list.contains(str) ) {
+					list.add( str );
+					if (log.isLoggable(Level.FINE))
+						log.fine("Adding source file: "+str);
+				}
 			} else {
 				listChildren( fo, list );
 			}

@@ -79,15 +79,38 @@ public class PerforceOps {
 	}
 	public static boolean syncChangeList(P4ChangeList cl) throws IOException {
 		int cno = -1;
-		StringWriter wr = new StringWriter();
+		StringWriter wr;
+
+		// make sure comment in change list is correct
+		wr = new StringWriter();
+		cl.writeTo( wr, false );
+		log.fine("reformulating change list comment with content:\n--------\n"+wr+"\n--------------");
+		PerforceProcess pi = new PerforceProcess( new String[]{ "p4", "change", "-i"},
+			new StringReader( wr.toString() ), null, false );
+		String res = pi.out.buf.toString();
+		int code = pi.exitCode();
+		if( code != 0 ) {
+			throw new IOException("Error syncing change list to fileset: "+res+"\nErrors: "+pi.err.buf );
+		}
+		log.fine("comment text returned messages: "+pi.out.buf+"\nError: "+pi.err.buf );
+		PerforceCommand.infoText( res );
+
+		// make sure all the right files are listed in the change list.
+		wr = new StringWriter();
 		for( String f : cl.files) {
 			wr.append( f );
 			wr.append("\n");
 		}
-		PerforceProcess pi = new PerforceProcess( new String[]{ "p4","-x","-", "reopen","-c", cl.change+"" },
+		log.fine("reopening these files to change list #"+cl.change+"\n------------\n"+wr+"\n--------------");
+		pi = new PerforceProcess( new String[]{ "p4","-x","-", "reopen","-c", cl.change+"" },
 			new StringReader( wr.toString()), null, false );
-		String res = pi.out.buf.toString();
-		//PerforceCommand.infoText( res );
+		code = pi.exitCode();
+		if( code != 0 ) {
+			throw new IOException("Error syncing change list to fileset:\n"+res+"\nErrors: "+pi.err.buf );
+		}
+		res = pi.out.buf.toString();
+
+		PerforceCommand.infoText( res );
 		return true;
 	}
 

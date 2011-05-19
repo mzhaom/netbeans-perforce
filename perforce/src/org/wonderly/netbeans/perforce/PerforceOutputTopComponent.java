@@ -644,13 +644,16 @@ final class PerforceOutputTopComponent extends TopComponent {
     
     public @Override void componentOpened() {
         // TODO add custom code on component opening
+		super.componentOpened();
     }
 
     public @Override void componentDeactivated() {
         // TODO add custom code on component closing
+		super.componentDeactivated();
     }
     public @Override void componentClosed() {
         // TODO add custom code on component closing
+		super.componentClosed();
     }
     
     /** replaces this in object stream */
