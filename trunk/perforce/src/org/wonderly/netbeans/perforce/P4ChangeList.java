@@ -43,12 +43,12 @@ import org.wonderly.awt.Packer;
  * @author gregg
  */
 public class P4ChangeList implements InputStreamProvider {
-	int change;
-	String user, client;
+	volatile int change = -1;
+	private final String user, client;
 	List<String>files;
-	String comment;
-	List<CheckControl>clist;
-	Logger log = Logger.getLogger( getClass().getName() );
+	private final String comment;
+	private List<CheckControl>clist;
+	private final Logger log = Logger.getLogger( getClass().getName() );
 
 	public String toString() {
 		return "changeList#"+change+"("+user+","+client+")";
@@ -96,7 +96,10 @@ public class P4ChangeList implements InputStreamProvider {
 	}
 
 	public boolean prepareSubmit() {
-		return( getDescription() != null && clist.size() > 0 );
+		boolean haveDesc = getDescription() != null;
+		boolean haveFiles = clist.size() > 0;
+		log.info("have description \""+getDescription()+"\" and file count: "+clist.size() );
+		return haveDesc && haveFiles;
 	}
 
 
@@ -104,6 +107,9 @@ public class P4ChangeList implements InputStreamProvider {
 		writeTo( new OutputStreamWriter( os ) );
 	}
 	public void writeTo( Writer os ) throws IOException {
+		writeTo( os, true );
+	}
+	public void writeTo( Writer os, boolean withFiles ) throws IOException {
 		log.info("Writing change spec to: "+os);
 		String desc = getDescription();
 		if( desc == null ) {
@@ -123,22 +129,24 @@ public class P4ChangeList implements InputStreamProvider {
 		ps.println("#  Files:       What opened files from the default changelist are to be added");
 		ps.println("#               to this changelist.  You may delete files from this list.");
 		ps.println("#               (New changelists only.)\n");
-		ps.println("Change: new\n");
+		ps.println("Change: "+(change != -1 ? change+"" : "new")+"\n");
 		ps.println("Client: "+client+"\n");
 		ps.println("User: "+user+"\n");
-		ps.println("Status: new\n");
+		ps.println("Status: "+(change != -1 ? "pending" : "new")+"\n");
 		ps.println("Description:");
 		ps.println("	"+desc.replace("\n","\n\t")+"\n");
-		ps.println("Files:");
-		for( CheckControl n: clist ) {
-//			PerforceCommand.infoText("Submitting:",n.getText());
-			if( n.isSelected() )
-				ps.println("\t"+n.getText());
+		if( withFiles) {
+			ps.println("Files:");
+			for( CheckControl n: clist ) {
+//				PerforceCommand.infoText( (n.isSelected() ? "" : "not ")+"submitting file: ",n.getText());
+				if( n.isSelected() )
+					ps.println("\t"+n.getText());
+			}
 		}
 		ps.flush();
 	}
 	
-	String descr;
+	private volatile String descr;
 	
 	public String getDescription() {
 		synchronized( this ) {

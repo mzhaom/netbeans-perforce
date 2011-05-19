@@ -50,15 +50,18 @@ public final class SubmitP4Project extends PerforceCommand {
 				}
 				if( code != 0 ) {
 					reportException( new IOException( "Perforce opened command failed: "+code));
+					return null;
 				}
 				//String[]nn = new String[oc.getOutput().size()];
 //				PerforceCommand.infoText( "Checking:", pc.getOutput().toString() );
-				log.info("output: "+pc.getOutput()+", len: "+((pc.getOutput() != null) ? pc.getOutput().size() : 0));
+				log.info("output: opened file count: "+((pc.getOutput() != null) ? pc.getOutput().size() : 0));
 				List<String>m = new ArrayList<String>();
 				List<String>ccl = new ArrayList<String>();
 				HashSet<Integer>changes = new HashSet<Integer>();
 				for( String v : pc.getOutput() ) {
 					String str;
+					log.info("found opened file: "+v);
+
 					String[]arr = v.split("#");
 					ccl.add( str = arr[0]);
 					if( arr.length > 1 ) {
@@ -67,10 +70,14 @@ public final class SubmitP4Project extends PerforceCommand {
 						if( idx >= 0 ) {
 							end = end.substring(idx+"change ".length());
 							idx = end.indexOf(" ");
-							if( idx == -1 )
+							if( idx == -1 ) {
+								log.warning("unexpected format for opened file output, missing change # after 'change ': "+end );
 								continue;
+							}
 							end = end.substring(0,idx);
 							int cno = Integer.parseInt(end);
+
+							log.info("   opened on change #"+cno );
 							if( changes.contains(cno) == false ) {
 								changes.add( cno );
 								boolean collect = false;
@@ -110,9 +117,16 @@ public final class SubmitP4Project extends PerforceCommand {
 					return null;
 				}
 				for( String s : ccl ) {
+					log.info("submit project adding opened file: "+s );
 					rcl.add( s );
 				}
 
+				try {
+					PerforceOps.syncChangeList(rcl);
+				} catch( Exception ex ) {
+					reportException(ex);
+					return null;
+				}
 				if (log.isLoggable(Level.INFO))
 					log.info("Got new changelist: "+rcl);
 				final P4ChangeList cl = rcl;
@@ -122,7 +136,9 @@ public final class SubmitP4Project extends PerforceCommand {
 //				} catch( Exception ex ) {
 //					log.log( Level.WARNING, ex.toString(), ex );
 //				}
+				log.info("preparing cl #"+cl.change+" for submission");
 				if( cl.prepareSubmit() ) {
+					log.info("submitting change content:\n---------------------\n"+cl.toString()+"\n----------------" );
 					final P4Command p4c = new P4Command( new String[]{ "submit"}, new String[]{"-i"}, cl );
 					new ComponentUpdateThread<Integer>() {
 						public @Override Integer construct() {
