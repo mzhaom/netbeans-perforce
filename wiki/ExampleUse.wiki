@@ -25,22 +25,22 @@ The global Team menu has a Perforce submenu which provides access to the perforc
 
 When a project node is selected in the navigation tree, as shown here, the project menu items will be enabled, not the file items.
 <table><tr><td>
-<img src="http://www.wonderly.org/netbeans/images/projectTree.png">
+<img src="http://www.wonderly.org/netbeans/images/projectTree.png"/>
 </td>
 <td width="40"/>
 <td>
-<img src="http://www.wonderly.org/netbeans/images/projectMenu.png"> 
+<img src="http://www.wonderly.org/netbeans/images/projectMenu.png"/> 
 </td>
 </tr>
 </table>
 
 When a source tree node is selected in the navigation tree, as shown here, the file based menu items will be enabled, not the project items.
 <table><tr><td>
-<img src="http://www.wonderly.org/netbeans/images/sourceTree.png">
+<img src="http://www.wonderly.org/netbeans/images/sourceTree.png"/>
 </td>
 <td width="40"/>
 <td>
-<img src="http://www.wonderly.org/netbeans/images/sourceMenu.png"> 
+<img src="http://www.wonderly.org/netbeans/images/sourceMenu.png"/> 
 </td>
 </tr>
 </table>
