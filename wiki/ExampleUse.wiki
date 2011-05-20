@@ -1,4 +1,3 @@
-
 = Checkout Action in Editor =
 The Checkout action shown in the editor toolbar below will allow you to quickly check out a file for edit. 
 
@@ -9,3 +8,35 @@ The diff action in the editor toolbar provides access to the graphical diff disp
 
 <img src="http://www.wonderly.org/netbeans/images/Image2.jpg">
 <hr>
+= P4MERGE Shows Diffs =
+The p4merge tool shows graphical diffs as depicted below. 
+<img src="http://www.wonderly.org/netbeans/images/Image9.jpg">
+<hr>
+= Submit Action in Editor =
+The submit action submits the single file corresponding to the file currently being edited.
+<img src="http://www.wonderly.org/netbeans/images/Image3.jpg">
+<hr>
+= Add Action in Editor =
+The add action will add the currently edited file to perforce. 
+<img src="http://www.wonderly.org/netbeans/images/Image4.jpg">
+<hr>
+= Global Team->Perforce Sub-Menu =
+The global Team menu has a Perforce submenu which provides access to the perforce operations on all files and project trees.
+
+When a project node is selected in the navigation tree, as shown here, the project menu items will be enabled, not the file items.
+<table><tr><td>
+<img src="http://www.wonderly.org/netbeans/images/projectTree.png">
+<td>
+<td width="40">
+<img src="http://www.wonderly.org/netbeans/images/projectMenu.png"> 
+</tr>
+</table>
+
+When a source tree node is selected in the navigation tree, as shown here, the file based menu items will be enabled, not the project items.
+<table><tr><td>
+<img src="http://www.wonderly.org/netbeans/images/sourceTree.png">
+<td>
+<td width="40">
+<img src="http://www.wonderly.org/netbeans/images/sourceMenu.png"> 
+</tr>
+</table>
