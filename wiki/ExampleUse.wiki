@@ -24,7 +24,7 @@ The add action will add the currently edited file to perforce.
 The global Team menu has a Perforce submenu which provides access to the perforce operations on all files and project trees.
 
 When a project node is selected in the navigation tree, as shown here, the project menu items will be enabled, not the file items.
-<table><tr><td>
+<table><tr><td valign="top">
 <img src="http://www.wonderly.org/netbeans/images/projectTree.png"/>
 </td>
 <td width="40"/>
@@ -35,7 +35,7 @@ When a project node is selected in the navigation tree, as shown here, the proje
 </table>
 
 When a source tree node is selected in the navigation tree, as shown here, the file based menu items will be enabled, not the project items.
-<table><tr><td>
+<table><tr><td valign="top">
 <img src="http://www.wonderly.org/netbeans/images/sourceTree.png"/>
 </td>
 <td width="40"/>
