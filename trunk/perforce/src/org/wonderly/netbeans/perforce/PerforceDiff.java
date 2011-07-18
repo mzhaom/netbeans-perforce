@@ -207,12 +207,14 @@ public class PerforceDiff extends CookieAction {
                         if( getValue() != null )
                             return;
 						// Run the merge command to see the differences
-                        final P4Command p4c = new P4Command( "p4diff", files, new Node[]{} );
+                        final P4Command p4c;
+						final String p4diff = PerforceOptions.p4DiffPath();
+						p4c = new P4Command( p4diff, files, new Node[]{} );
                         final Process pp = p4c.getProcess();
 						
 						// At some point we could put a component into here to disable...
                         new ComponentUpdateThread() {
-                            public Object construct() {
+                            public @Override Object construct() {
                                 try {
                                     return new Integer( pp.waitFor() );
                                 } catch( Exception ex ) {
@@ -227,14 +229,14 @@ public class PerforceDiff extends CookieAction {
 									// Need to do this in a swing thread.
                                     if( code != 0 ) {
 										if( code != 2 ) {
-											errorText( "p4diff "+files[0]+
+											errorText( p4diff+" "+files[0]+
 												" "+files[1]+" exited", ""+code );
 											showError( p4c, code );
 										} else {
-											infoText("p4diff","window closed");
+											infoText(p4diff,"window closed: exit="+code);
 										}
                                     } else {
-										infoText( "p4diff "+files[0]+
+										infoText( p4diff+" "+files[0]+
 											" "+files[1]+" exited", ""+code );
 									}
                                } finally {
