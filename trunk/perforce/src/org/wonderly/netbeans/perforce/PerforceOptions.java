@@ -84,7 +84,7 @@ public class PerforceOptions  extends AdvancedOption {
 	private static JTextField p4user, p4port, p4client, p4diff;
 	
 	public static String p4DiffPath() {
-		return p4diff == null ? "p4diff" : p4diff.getText();
+		return p4diff == null ? "p4merge" : p4diff.getText();
 	}
 
 	static void dumpPrefs( Preferences p ) {
@@ -144,8 +144,8 @@ public class PerforceOptions  extends AdvancedOption {
 			nm = System.getProperty("P4CLIENT");
 		}
 		pm.map("p4client", nm, p4client);
-		pm.map("p4diff", "p4diff", p4diff );
-		log.info("found p4 diff command: \""+p4diff.getText());
+		pm.map("p4diff", "p4merge", p4diff );
+		log.info("using p4 diff command: \""+p4diff.getText());
 
 		String port = System.getProperty("P4PORT");
 		if( port == null )
@@ -171,7 +171,7 @@ public class PerforceOptions  extends AdvancedOption {
 					nm = System.getProperty("P4CLIENT");
 				}
 				pm.map("p4client", nm, p4client);
-				pm.map("p4diff", "p4diff", p4diff );
+				pm.map("p4diff", "p4merge", p4diff );
 
 				String port = System.getProperty("P4PORT");
 				if( port == null )
